@@ -48,6 +48,7 @@ type Config struct {
 	VMName string `mapstructure:"vm_name"`
 	VMID   int    `mapstructure:"vm_id"`
 
+	Args           string            `mapstructure:"args"`
 	Boot           string            `mapstructure:"boot"`
 	Memory         int               `mapstructure:"memory"`
 	BalloonMinimum int               `mapstructure:"ballooning_minimum"`
@@ -113,6 +114,7 @@ type diskConfig struct {
 	IOThread        bool   `mapstructure:"io_thread"`
 	Discard         bool   `mapstructure:"discard"`
 	SSD             bool   `mapstructure:"ssd"`
+	Volume          string `mapstructure:"volume"`
 }
 type efiConfig struct {
 	EFIStoragePool  string `mapstructure:"efi_storage_pool"`
@@ -363,8 +365,11 @@ func (c *Config) Prepare(upper interface{}, raws ...interface{}) ([]string, []st
 				}
 			}
 		}
-		if disk.StoragePool == "" {
-			errs = packersdk.MultiErrorAppend(errs, fmt.Errorf("disks[%d].storage_pool must be specified", idx))
+		if disk.SSD && disk.Type == "virtio" {
+			errs = packersdk.MultiErrorAppend(errs, fmt.Errorf("SSD emulation is not supported on a virtio disk"))
+		}
+		if disk.StoragePool == "" && disk.Volume == "" {
+			errs = packersdk.MultiErrorAppend(errs, fmt.Errorf("disks[%d].storage_pool or disks[%d].volume must be specified", idx, idx))
 		}
 		if disk.StoragePoolType != "" {
 			warnings = append(warnings, "storage_pool_type is deprecated and should be omitted, it will be removed in a later version of the proxmox plugin")

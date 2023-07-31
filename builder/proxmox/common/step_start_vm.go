@@ -111,6 +111,7 @@ func (s *stepStartVM) Run(ctx context.Context, state multistep.StateBag) multist
 
 	config := proxmox.ConfigQemu{
 		Name:           c.VMName,
+		Args:           c.Args,
 		Agent:          agent,
 		QemuKVM:        &kvm,
 		Boot:           c.Boot, // Boot priority, example: "order=virtio0;ide2;net0", virtio0:Disk0 -> ide0:CDROM -> net0:Network
@@ -281,6 +282,7 @@ func generateProxmoxDisks(disks []diskConfig) proxmox.QemuDevices {
 		setDeviceParamIfDefined(devs[idx], "storage", disks[idx].StoragePool)
 		setDeviceParamIfDefined(devs[idx], "cache", disks[idx].CacheMode)
 		setDeviceParamIfDefined(devs[idx], "format", disks[idx].DiskFormat)
+		setDeviceParamIfDefined(devs[idx], "volume", disks[idx].Volume)
 		if devs[idx]["type"] == "scsi" || devs[idx]["type"] == "virtio" {
 			setDeviceParamIfDefined(devs[idx], "iothread", strconv.FormatBool(disks[idx].IOThread))
 		}
@@ -291,7 +293,10 @@ func generateProxmoxDisks(disks []diskConfig) proxmox.QemuDevices {
 			}
 			return "ignore"
 		}())
-		setDeviceParamIfDefined(devs[idx], "ssd", strconv.FormatBool(disks[idx].SSD))
+		// SSD not supported with virtio
+		if disks[idx].Type != "virtio" {
+			setDeviceParamIfDefined(devs[idx], "ssd", strconv.FormatBool(disks[idx].SSD))
+		}
 	}
 	return devs
 }
