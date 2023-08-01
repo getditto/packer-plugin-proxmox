@@ -7,8 +7,8 @@ import (
 	"context"
 
 	proxmoxapi "github.com/Telmate/proxmox-api-go/proxmox"
+	proxmox "github.com/getditto/packer-plugin-proxmox/builder/proxmox/common"
 	"github.com/hashicorp/hcl/v2/hcldec"
-	proxmox "github.com/hashicorp/packer-plugin-proxmox/builder/proxmox/common"
 	"github.com/hashicorp/packer-plugin-sdk/multistep"
 	"github.com/hashicorp/packer-plugin-sdk/multistep/commonsteps"
 	packersdk "github.com/hashicorp/packer-plugin-sdk/packer"

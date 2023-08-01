@@ -12,7 +12,7 @@ import (
 	"net/netip"
 	"strings"
 
-	proxmoxcommon "github.com/hashicorp/packer-plugin-proxmox/builder/proxmox/common"
+	proxmoxcommon "github.com/getditto/packer-plugin-proxmox/builder/proxmox/common"
 	packersdk "github.com/hashicorp/packer-plugin-sdk/packer"
 	"github.com/hashicorp/packer-plugin-sdk/template/config"
 )

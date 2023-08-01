@@ -1,4 +1,4 @@
-module github.com/hashicorp/packer-plugin-proxmox
+module github.com/getditto/packer-plugin-proxmox
 
 go 1.18
 

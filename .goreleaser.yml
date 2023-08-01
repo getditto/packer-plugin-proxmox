@@ -93,11 +93,6 @@ archives:
 checksum:
   name_template: '{{ .ProjectName }}_v{{ .Version }}_SHA256SUMS'
   algorithm: sha256
-signs:
-  - cmd: signore
-    args: ["sign", "--dearmor", "--file", "${artifact}", "--out", "${signature}"]
-    artifacts: checksum
-    signature: ${artifact}.sig
 release:
   # If you want to manually examine the release before its live, uncomment this line:
   # draft: true

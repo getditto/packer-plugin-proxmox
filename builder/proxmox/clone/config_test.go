@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	proxmox "github.com/hashicorp/packer-plugin-proxmox/builder/proxmox/common"
+	proxmox "github.com/getditto/packer-plugin-proxmox/builder/proxmox/common"
 	packersdk "github.com/hashicorp/packer-plugin-sdk/packer"
 )
 

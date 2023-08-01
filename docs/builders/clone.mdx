@@ -372,23 +372,156 @@ or responding to pattern `/dev/.+`. Example:
 
 ### VirtIO RNG device
 
-@include 'builder/proxmox/common/rng0Config.mdx'
+<!-- Code generated from the comments of the rng0Config struct in builder/proxmox/common/config.go; DO NOT EDIT MANUALLY -->
+
+- `rng0` (object): Configure Random Number Generator via VirtIO.
+A virtual hardware-RNG can be used to provide entropy from the host system to a guest VM helping avoid entropy starvation which might cause the guest system slow down.
+The device is sourced from a host device and guest, his use can be limited: `max_bytes` bytes of data will become available on a `period` ms timer.
+[PVE documentation](https://pve.proxmox.com/pve-docs/pve-admin-guide.html) recommends to always use a limiter to avoid guests using too many host resources.
+
+HCL2 example:
+
+```hcl
+
+	rng0 {
+	  source    = "/dev/urandom"
+	  max_bytes = 1024
+	  period    = 1000
+	}
+
+```
+
+JSON example:
+
+```json
+
+	{
+	    "rng0": {
+	        "source": "/dev/urandom",
+	        "max_bytes": 1024,
+	        "period": 1000
+	    }
+	}
+
+```
+
+<!-- End of code generated from the comments of the rng0Config struct in builder/proxmox/common/config.go; -->
+
 
 #### Required:
 
-@include 'builder/proxmox/common/rng0Config-required.mdx'
+<!-- Code generated from the comments of the rng0Config struct in builder/proxmox/common/config.go; DO NOT EDIT MANUALLY -->
+
+- `source` (string) - Device on the host to gather entropy from.
+  `/dev/urandom` should be preferred over `/dev/random` as Proxmox PVE documentation suggests.
+  `/dev/hwrng` can be used to pass through a hardware RNG.
+  Can be one of `/dev/urandom`, `/dev/random`, `/dev/hwrng`.
+
+- `max_bytes` (int) - Maximum bytes of entropy allowed to get injected into the guest every `period` milliseconds.
+  Use a lower value when using `/dev/random` since can lead to entropy starvation on the host system.
+  `0` disables limiting and according to PVE documentation is potentially dangerous for the host.
+  Recommended value: `1024`.
+
+<!-- End of code generated from the comments of the rng0Config struct in builder/proxmox/common/config.go; -->
+
 
 #### Optional:
 
-@include 'builder/proxmox/common/rng0Config-not-required.mdx'
+<!-- Code generated from the comments of the rng0Config struct in builder/proxmox/common/config.go; DO NOT EDIT MANUALLY -->
+
+- `period` (int) - Period in milliseconds on which the the entropy-injection quota is reset.
+  Can be a positive value.
+  Recommended value: `1000`.
+
+<!-- End of code generated from the comments of the rng0Config struct in builder/proxmox/common/config.go; -->
+
 
 ### PCI devices
 
-@include 'builder/proxmox/common/pciDeviceConfig.mdx'
+<!-- Code generated from the comments of the pciDeviceConfig struct in builder/proxmox/common/config.go; DO NOT EDIT MANUALLY -->
+
+Allows passing through a host PCI device into the VM. For example, a graphics card
+or a network adapter. Devices that are mapped into a guest VM are no longer available
+on the host. A minimal configuration only requires either the `host` or the `mapping`
+key to be specifed.
+
+Note: VMs with passed-through devices cannot be migrated.
+
+HCL2 example:
+
+```hcl
+
+	pci_devices {
+	  host          = "0000:0d:00.1"
+	  pcie          = false
+	  device_id     = "1003"
+	  legacy_igd    = false
+	  mdev          = "some-model"
+	  hide_rombar   = false
+	  romfile       = "vbios.bin"
+	  sub_device_id = ""
+	  sub_vendor_id = ""
+	  vendor_id     = "15B3"
+	  x_vga         = false
+	}
+
+```
+
+JSON example:
+
+```json
+
+	{
+	  "pci_devices": {
+	    "host"          : "0000:0d:00.1",
+	    "pcie"          : false,
+	    "device_id"     : "1003",
+	    "legacy_igd"    : false,
+	    "mdev"          : "some-model",
+	    "hide_rombar"   : false,
+	    "romfile"       : "vbios.bin",
+	    "sub_device_id" : "",
+	    "sub_vendor_id" : "",
+	    "vendor_id"     : "15B3",
+	    "x_vga"         : false
+	  }
+	}
+
+```
+
+<!-- End of code generated from the comments of the pciDeviceConfig struct in builder/proxmox/common/config.go; -->
+
 
 #### Optional:
 
-@include 'builder/proxmox/common/pciDeviceConfig-not-required.mdx'
+<!-- Code generated from the comments of the pciDeviceConfig struct in builder/proxmox/common/config.go; DO NOT EDIT MANUALLY -->
+
+- `host` (string) - The PCI ID of a host’s PCI device or a PCI virtual function. You can us the `lspci` command to list existing PCI devices. Either this or the `mapping` key must be set.
+
+- `device_id` (string) - Override PCI device ID visible to guest.
+
+- `legacy_igd` (bool) - Pass this device in legacy IGD mode, making it the primary and exclusive graphics device in the VM. Requires `pc-i440fx` machine type and VGA set to `none`. Defaults to `false`.
+
+- `mapping` (string) - The ID of a cluster wide mapping. Either this or the `host` key must be set.
+
+- `pcie` (bool) - Present the device as a PCIe device (needs `q35` machine model). Defaults to `false`.
+
+- `mdev` (string) - The type of mediated device to use. An instance of this type will be created on startup of the VM and will be cleaned up when the VM stops.
+
+- `hide_rombar` (bool) - Specify whether or not the device’s ROM BAR will be visible in the guest’s memory map. Defaults to `false`.
+
+- `romfile` (string) - Custom PCI device rom filename (must be located in `/usr/share/kvm/`).
+
+- `sub_device_id` (string) - Override PCI subsystem device ID visible to guest.
+
+- `sub_vendor_id` (string) - Override PCI subsystem vendor ID visible to guest.
+
+- `vendor_id` (string) - Override PCI vendor ID visible to guest.
+
+- `x_vga` (bool) - Enable vfio-vga device support. Defaults to `false`.
+
+<!-- End of code generated from the comments of the pciDeviceConfig struct in builder/proxmox/common/config.go; -->
+
 
 ## Example: Cloud-Init enabled Debian
 

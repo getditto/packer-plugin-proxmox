@@ -12,8 +12,8 @@ import (
 	"path"
 
 	"github.com/Telmate/proxmox-api-go/proxmox"
+	proxmoxcommon "github.com/getditto/packer-plugin-proxmox/builder/proxmox/common"
 	"github.com/hashicorp/go-getter/v2"
-	proxmoxcommon "github.com/hashicorp/packer-plugin-proxmox/builder/proxmox/common"
 	"github.com/hashicorp/packer-plugin-sdk/multistep/commonsteps"
 	packersdk "github.com/hashicorp/packer-plugin-sdk/packer"
 )
