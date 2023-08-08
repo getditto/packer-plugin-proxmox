@@ -42,6 +42,8 @@ func (s *stepFinalizeTemplateConfig) Run(ctx context.Context, state multistep.St
 	// During build, the description is "Packer ephemeral build VM", so if no description is
 	// set, we need to clear it
 	changes["description"] = c.TemplateDescription
+	// Set the tags
+	changes["tags"] = strings.Join(c.TemplateTags, ",")
 
 	vmParams, err := client.GetVmConfig(vmRef)
 	if err != nil {

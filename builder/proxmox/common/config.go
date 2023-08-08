@@ -72,8 +72,9 @@ type Config struct {
 	Onboot         bool              `mapstructure:"onboot"`
 	DisableKVM     bool              `mapstructure:"disable_kvm"`
 
-	TemplateName        string `mapstructure:"template_name"`
-	TemplateDescription string `mapstructure:"template_description"`
+	TemplateName        string   `mapstructure:"template_name"`
+	TemplateDescription string   `mapstructure:"template_description"`
+	TemplateTags        []string `mapstructure:"template_tags"`
 
 	CloudInit            bool   `mapstructure:"cloud_init"`
 	CloudInitStoragePool string `mapstructure:"cloud_init_storage_pool"`

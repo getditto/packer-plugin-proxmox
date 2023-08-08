@@ -3,8 +3,8 @@
 package proxmoxiso
 
 import (
-	"github.com/hashicorp/hcl/v2/hcldec"
 	proxmox "github.com/getditto/packer-plugin-proxmox/builder/proxmox/common"
+	"github.com/hashicorp/hcl/v2/hcldec"
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -113,6 +113,7 @@ type FlatConfig struct {
 	DisableKVM                *bool                              `mapstructure:"disable_kvm" cty:"disable_kvm" hcl:"disable_kvm"`
 	TemplateName              *string                            `mapstructure:"template_name" cty:"template_name" hcl:"template_name"`
 	TemplateDescription       *string                            `mapstructure:"template_description" cty:"template_description" hcl:"template_description"`
+	TemplateTags              []string                           `mapstructure:"template_tags" cty:"template_tags" hcl:"template_tags"`
 	CloudInit                 *bool                              `mapstructure:"cloud_init" cty:"cloud_init" hcl:"cloud_init"`
 	CloudInitStoragePool      *string                            `mapstructure:"cloud_init_storage_pool" cty:"cloud_init_storage_pool" hcl:"cloud_init_storage_pool"`
 	AdditionalISOFiles        []proxmox.FlatadditionalISOsConfig `mapstructure:"additional_iso_files" cty:"additional_iso_files" hcl:"additional_iso_files"`
@@ -242,6 +243,7 @@ func (*FlatConfig) HCL2Spec() map[string]hcldec.Spec {
 		"disable_kvm":                  &hcldec.AttrSpec{Name: "disable_kvm", Type: cty.Bool, Required: false},
 		"template_name":                &hcldec.AttrSpec{Name: "template_name", Type: cty.String, Required: false},
 		"template_description":         &hcldec.AttrSpec{Name: "template_description", Type: cty.String, Required: false},
+		"template_tags":                &hcldec.AttrSpec{Name: "template_tags", Type: cty.List(cty.String), Required: false},
 		"cloud_init":                   &hcldec.AttrSpec{Name: "cloud_init", Type: cty.Bool, Required: false},
 		"cloud_init_storage_pool":      &hcldec.AttrSpec{Name: "cloud_init_storage_pool", Type: cty.String, Required: false},
 		"additional_iso_files":         &hcldec.BlockListSpec{TypeName: "additional_iso_files", Nested: hcldec.ObjectSpec((*proxmox.FlatadditionalISOsConfig)(nil).HCL2Spec())},
